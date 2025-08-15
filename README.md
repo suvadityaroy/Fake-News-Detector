@@ -50,6 +50,3 @@ python train.py
 
 ## Attribution
 **Created by Suvaditya Roy**
-
----
-For demo purposes only. Not for production use. Improve with more data and robust validation for real-world deployment.
