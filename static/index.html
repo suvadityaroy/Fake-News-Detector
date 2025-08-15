@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Fake News Detector</title>
+  <link rel="manifest" href="/static/manifest.json">
+  <style>
+    body {
+      font-family:Arial,Helvetica,sans-serif;
+      margin:0;padding:20px;
+      background: linear-gradient(120deg, #f7f7f9 0%, #e0e7ff 100%);
+      animation: bgmove 8s ease-in-out infinite alternate;
+    }
+    @keyframes bgmove {
+      0% {background-position:0 0;}
+      100% {background-position:100vw 100vh;}
+    }
+    .card{max-width:800px;margin:32px auto;padding:20px;background:white;border-radius:12px;box-shadow:0 4px 16px rgba(60,60,120,0.10)}
+    textarea{width:100%;height:140px;padding:8px;font-size:16px;border-radius:6px;border:1px solid #dbeafe;box-shadow:0 1px 2px #e0e7ff}
+    button{padding:10px 16px;font-size:16px;transition:background 0.2s, transform 0.3s; border-radius:6px;background:#3f51b5;color:#fff;border:none;box-shadow:0 2px 6px #e0e7ff;cursor:pointer;animation: btnpulse 2s infinite alternate;}
+    button:hover{background:#283593;transform:scale(1.07);}
+    @keyframes btnpulse {
+      0% {box-shadow:0 2px 6px #e0e7ff;}
+      100% {box-shadow:0 6px 18px #b3b3ff;}
+    }
+    .card:hover{box-shadow:0 8px 32px #b3b3ff;transition:box-shadow 0.4s;}
+    .result{margin-top:16px;font-weight:700;font-size:1.3em;opacity:0;transform:translateY(20px);transition:opacity 0.7s, transform 0.7s;}
+    .result.visible{opacity:1;transform:translateY(0);animation: fadeinup 0.7s cubic-bezier(.4,0,.2,1);}
+    @keyframes fadeinup {
+      0% {opacity:0;transform:translateY(20px);}
+      100% {opacity:1;transform:translateY(0);}
+    }
+    #probbar{margin-top:16px;display:none;opacity:0;transform:translateY(20px);transition:opacity 0.7s, transform 0.7s;}
+    #probbar.visible{opacity:1;transform:translateY(0);animation: fadeinup 0.7s cubic-bezier(.4,0,.2,1);}
+    #bar{height:24px;width:0;background:#e74c3c;border-radius:6px;transition:width 0.7s cubic-bezier(.4,0,.2,1)}
+    #probval{font-size:15px;font-weight:600;margin-left:8px;}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div style="text-align:right;font-size:13px;color:#888;margin-bottom:8px;">Created by Suvaditya Roy</div>
+    <h1>Fake News Detector</h1>
+    <p>Paste a news headline or short article and click Detect.</p>
+    <textarea id="text" placeholder="Enter text..."></textarea>
+    <div style="margin-top:8px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+      <button id="btn">Detect</button>
+      <label style="font-size:15px;cursor:pointer;background:#e0e7ff;padding:6px 12px;border-radius:6px;box-shadow:0 1px 2px #dbeafe;">
+        <span id="filelabel">Upload PDF, Word, or Text</span>
+        <input type="file" id="fileinput" accept=".pdf,.docx,.txt" style="display:none">
+      </label>
+    </div>
+    <div id="fileinfo" style="margin-top:8px;font-size:14px;color:#555;display:none"></div>
+    <div id="langcred" style="margin-top:12px;display:none">
+      <div id="langinfo" style="font-size:14px;color:#3f51b5"></div>
+      <div id="credinfo" style="font-size:14px;color:#e67e22"></div>
+    </div>
+    <div id="saveShareRow" style="margin-top:16px;display:none;gap:12px;align-items:center;flex-wrap:wrap">
+      <button id="savebtn" style="background:#27ae60">Save as PDF</button>
+      <button id="sharebtn" style="background:#00bcd4">Share Result</button>
+    </div>
+    <div class="result" id="result"></div>
+    <div id="probbar">
+      <div style="font-size:14px;margin-bottom:4px">Probability:
+        <span id="probval"></span>
+      </div>
+      <div style="background:#eee;border-radius:6px;overflow:hidden;height:24px;width:100%">
+        <div id="bar"></div>
+      </div>
+      <div id="explain" style="margin-top:8px;font-size:13px;color:#555"></div>
+    </div>
+  </div>
+
+  <script>
+
+    async function predict(text){
+      try {
+        const res = await fetch('/predict', {
+          method: 'POST', headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({text})
+        });
+        if(!res.ok){
+          let errMsg = 'Request failed';
+          try {
+            const err = await res.json();
+            errMsg = err.detail || errMsg;
+          } catch(e) {
+            errMsg = `HTTP ${res.status}`;
+          }
+          throw new Error(errMsg);
+        }
+        return res.json();
+      } catch (e) {
+        // Log error to console for debugging
+        console.error('Fetch error:', e);
+        throw new Error('Failed to fetch: ' + e.message);
+      }
+    }
+
+  const saveShareRow = document.getElementById('saveShareRow');
+  document.getElementById('btn').addEventListener('click', async ()=>{
+      const txt = document.getElementById('text').value;
+      const out = document.getElementById('result');
+      const bar = document.getElementById('bar');
+      const probbar = document.getElementById('probbar');
+      const explain = document.getElementById('explain');
+      const probval = document.getElementById('probval');
+      const langcred = document.getElementById('langcred');
+      const langinfo = document.getElementById('langinfo');
+      const credinfo = document.getElementById('credinfo');
+      out.textContent = 'Detecting...';
+  out.classList.remove('visible');
+  saveShareRow.style.display = 'none';
+      probbar.classList.remove('visible');
+      probbar.style.display = 'none';
+      bar.style.width = '0%';
+      probval.textContent = '';
+      langcred.style.display = 'none';
+      try{
+        // Language detection
+        let lang = 'en';
+        if(window.Intl && window.Intl.Locale){
+          try{
+            lang = new Intl.Locale(navigator.language).baseName;
+          }catch{}
+        }
+        langinfo.textContent = 'Detected language: ' + lang.toUpperCase();
+        langcred.style.display = 'block';
+    // Remove source credibility and URL detection
+    credinfo.textContent = '';
+        const r = await predict(txt);
+        let color = r.label === 'fake' ? '#e74c3c' : '#27ae60';
+        out.textContent = r.label === 'fake' ? 'Fake News' : 'Real News';
+        out.style.color = color;
+  out.classList.add('visible');
+  saveShareRow.style.display = 'flex';
+        bar.style.background = color;
+        setTimeout(()=>{
+          bar.style.width = (r.probability*100).toFixed(1) + '%';
+        }, 100);
+        probval.textContent = (r.probability*100).toFixed(1) + '%';
+        probbar.style.display = 'block';
+        setTimeout(()=>{ probbar.classList.add('visible'); }, 150);
+        explain.textContent = r.label === 'fake' ?
+          'This text has features often found in fake news: sensational keywords, excessive punctuation, or unusual formatting.' :
+          'This text looks typical for real news: neutral language, normal length, and few suspicious features.';
+      }catch(e){
+        out.textContent = e.message;
+        out.style.color = '#333';
+  out.classList.add('visible');
+  probbar.classList.remove('visible');
+  probbar.style.display = 'none';
+  saveShareRow.style.display = 'none';
+      }
+    });
+
+    // Save as PDF
+    document.getElementById('savebtn').addEventListener('click', ()=>{
+      const txt = document.getElementById('text').value;
+      const result = document.getElementById('result').textContent;
+      const prob = document.getElementById('probval').textContent;
+      const blob = new Blob([
+        'Fake News Detector\n\n',
+        'Text:\n', txt, '\n\n',
+        'Result: ', result, '\n',
+        'Probability: ', prob, '\n'
+      ], {type:'application/pdf'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'fakenews_result.pdf';
+      a.click();
+      setTimeout(()=>URL.revokeObjectURL(url), 2000);
+    });
+
+    // Share result
+    document.getElementById('sharebtn').addEventListener('click', ()=>{
+      const txt = document.getElementById('text').value;
+      const result = document.getElementById('result').textContent;
+      const prob = document.getElementById('probval').textContent;
+      const shareText = `Fake News Detector\n\nText:\n${txt}\n\nResult: ${result}\nProbability: ${prob}`;
+      if(navigator.share){
+        navigator.share({title:'Fake News Detector', text:shareText});
+      }else{
+        alert('Share: ' + shareText);
+      }
+    });
+
+    // File upload logic
+    const fileinput = document.getElementById('fileinput');
+    const fileinfo = document.getElementById('fileinfo');
+    fileinput.addEventListener('change', async (e)=>{
+      const file = e.target.files[0];
+      if(!file) return;
+      fileinfo.style.display = 'block';
+      fileinfo.textContent = `Selected: ${file.name}`;
+      // Read file and extract text (client-side for .txt, else send to backend)
+      if(file.name.endsWith('.txt')){
+        const reader = new FileReader();
+        reader.onload = function(ev){
+          document.getElementById('text').value = ev.target.result;
+          fileinfo.textContent += ' (loaded as text)';
+        };
+        reader.readAsText(file);
+      }else{
+        // For PDF or DOCX, send to backend for extraction
+        const formData = new FormData();
+        formData.append('file', file);
+        fileinfo.textContent += ' (extracting...)';
+        fetch('/extract', {method:'POST', body:formData}).then(async resp=>{
+          if(!resp.ok){
+            fileinfo.textContent = 'Error extracting text.';
+            return;
+          }
+          const data = await resp.json();
+          document.getElementById('text').value = data.text || '';
+          fileinfo.textContent += ' (text loaded)';
+        }).catch(()=>{
+          fileinfo.textContent = 'Error extracting text.';
+        });
+      }
+    });
+
+    // register service worker
+    if('serviceWorker' in navigator){
+      navigator.serviceWorker.register('/static/sw.js').catch(()=>{});
+    }
+  </script>
+</body>
+</html>
