@@ -6,68 +6,327 @@
   <title>Fake News Detector</title>
   <link rel="manifest" href="/static/manifest.json">
   <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
     body {
-      font-family:Arial,Helvetica,sans-serif;
-      margin:0;padding:20px;
-      background: linear-gradient(120deg, #f7f7f9 0%, #e0e7ff 100%);
-      animation: bgmove 8s ease-in-out infinite alternate;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      padding: 20px;
+      background: linear-gradient(-45deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
+      position: relative;
+      overflow-x: hidden;
     }
-    @keyframes bgmove {
-      0% {background-position:0 0;}
-      100% {background-position:100vw 100vh;}
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
-    .card{max-width:800px;margin:32px auto;padding:20px;background:white;border-radius:12px;box-shadow:0 4px 16px rgba(60,60,120,0.10)}
-    textarea{width:100%;height:140px;padding:8px;font-size:16px;border-radius:6px;border:1px solid #dbeafe;box-shadow:0 1px 2px #e0e7ff}
-    button{padding:10px 16px;font-size:16px;transition:background 0.2s, transform 0.3s; border-radius:6px;background:#3f51b5;color:#fff;border:none;box-shadow:0 2px 6px #e0e7ff;cursor:pointer;animation: btnpulse 2s infinite alternate;}
-    button:hover{background:#283593;transform:scale(1.07);}
-    @keyframes btnpulse {
-      0% {box-shadow:0 2px 6px #e0e7ff;}
-      100% {box-shadow:0 6px 18px #b3b3ff;}
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(255,255,255,0.08) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
     }
-    .card:hover{box-shadow:0 8px 32px #b3b3ff;transition:box-shadow 0.4s;}
-    .result{margin-top:16px;font-weight:700;font-size:1.3em;opacity:0;transform:translateY(20px);transition:opacity 0.7s, transform 0.7s;}
-    .result.visible{opacity:1;transform:translateY(0);animation: fadeinup 0.7s cubic-bezier(.4,0,.2,1);}
-    @keyframes fadeinup {
-      0% {opacity:0;transform:translateY(20px);}
-      100% {opacity:1;transform:translateY(0);}
+    .container {
+      position: relative;
+      z-index: 1;
     }
-    #probbar{margin-top:16px;display:none;opacity:0;transform:translateY(20px);transition:opacity 0.7s, transform 0.7s;}
-    #probbar.visible{opacity:1;transform:translateY(0);animation: fadeinup 0.7s cubic-bezier(.4,0,.2,1);}
-    #bar{height:24px;width:0;background:#e74c3c;border-radius:6px;transition:width 0.7s cubic-bezier(.4,0,.2,1)}
-    #probval{font-size:15px;font-weight:600;margin-left:8px;}
+    .card {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 40px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.5);
+      transform: translateY(0);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.6);
+    }
+    h1 {
+      font-size: 2.5em;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+      animation: titlePulse 3s ease-in-out infinite;
+    }
+    @keyframes titlePulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.85; }
+    }
+    .subtitle {
+      color: #666;
+      font-size: 1.1em;
+      margin-bottom: 30px;
+    }
+    textarea {
+      width: 100%;
+      height: 160px;
+      padding: 16px;
+      font-size: 16px;
+      border-radius: 12px;
+      border: 2px solid #e0e7ff;
+      background: #fafbff;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+      transition: all 0.3s;
+      font-family: inherit;
+      resize: vertical;
+    }
+    textarea:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102,126,234,0.1), inset 0 2px 4px rgba(0,0,0,0.05);
+      background: #fff;
+    }
+    .button-group {
+      margin-top: 20px;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    button {
+      padding: 14px 28px;
+      font-size: 17px;
+      font-weight: 600;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(102,126,234,0.4);
+    }
+    button::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+    button:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102,126,234,0.6);
+    }
+    button:active {
+      transform: translateY(0);
+    }
+    .upload-label {
+      padding: 14px 24px;
+      font-size: 16px;
+      cursor: pointer;
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(245,87,108,0.4);
+      transition: all 0.3s;
+      font-weight: 500;
+    }
+    .upload-label:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(245,87,108,0.6);
+    }
+    .result {
+      margin-top: 30px;
+      padding: 20px;
+      font-weight: 700;
+      font-size: 1.8em;
+      text-align: center;
+      opacity: 0;
+      transform: scale(0.8);
+      transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.5);
+    }
+    .result.visible {
+      opacity: 1;
+      transform: scale(1);
+      animation: resultBounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+    @keyframes resultBounce {
+      0% { transform: scale(0.8); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    #probbar {
+      margin-top: 24px;
+      display: none;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s ease;
+    }
+    #probbar.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .prob-container {
+      background: rgba(255,255,255,0.6);
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 12px;
+    }
+    #bar {
+      height: 32px;
+      width: 0;
+      background: linear-gradient(90deg, #e74c3c 0%, #c0392b 100%);
+      border-radius: 8px;
+      transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 12px rgba(231,76,60,0.4);
+      position: relative;
+      overflow: hidden;
+    }
+    #bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: shimmer 2s infinite;
+    }
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    #probval {
+      font-size: 18px;
+      font-weight: 700;
+      margin-left: 8px;
+      color: #667eea;
+    }
+    .attribution {
+      text-align: right;
+      font-size: 14px;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 16px;
+      font-weight: 500;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    #fileinfo {
+      margin-top: 12px;
+      padding: 12px;
+      background: rgba(102,126,234,0.1);
+      border-radius: 8px;
+      font-size: 14px;
+      color: #667eea;
+      display: none;
+    }
+    #langcred {
+      margin-top: 16px;
+      padding: 16px;
+      background: rgba(255,255,255,0.5);
+      border-radius: 12px;
+      display: none;
+    }
+    #langinfo {
+      font-size: 15px;
+      color: #667eea;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    #explain {
+      margin-top: 16px;
+      padding: 16px;
+      font-size: 15px;
+      color: #555;
+      background: rgba(255,255,255,0.6);
+      border-radius: 10px;
+      line-height: 1.6;
+    }
+    #saveShareRow {
+      margin-top: 24px;
+      display: none;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    #savebtn {
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      box-shadow: 0 4px 15px rgba(17,153,142,0.4);
+    }
+    #savebtn:hover {
+      box-shadow: 0 8px 25px rgba(17,153,142,0.6);
+    }
+    #sharebtn {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      box-shadow: 0 4px 15px rgba(79,172,254,0.4);
+    }
+    #sharebtn:hover {
+      box-shadow: 0 8px 25px rgba(79,172,254,0.6);
+    }
+    @media (max-width: 600px) {
+      .card {
+        padding: 24px;
+      }
+      h1 {
+        font-size: 2em;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="card">
-    <div style="text-align:right;font-size:13px;color:#888;margin-bottom:8px;">Created by Suvaditya Roy</div>
-    <h1>Fake News Detector</h1>
-    <p>Paste a news headline or short article and click Detect.</p>
-    <textarea id="text" placeholder="Enter text..."></textarea>
-    <div style="margin-top:8px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
-      <button id="btn">Detect</button>
-      <label style="font-size:15px;cursor:pointer;background:#e0e7ff;padding:6px 12px;border-radius:6px;box-shadow:0 1px 2px #dbeafe;">
-        <span id="filelabel">Upload PDF, Word, or Text</span>
-        <input type="file" id="fileinput" accept=".pdf,.docx,.txt" style="display:none">
-      </label>
-    </div>
+  <div class="container">
+    <div class="attribution">Created by Suvaditya Roy</div>
+    <div class="card">
+      <h1>🔍 Fake News Detector</h1>
+      <p class="subtitle">Analyze news headlines and articles with AI-powered detection</p>
+      <textarea id="text" placeholder="Paste your news text here..."></textarea>
+      <div class="button-group">
+        <button id="btn">🚀 Detect Now</button>
+        <label class="upload-label">
+          <span id="filelabel">📁 Upload File</span>
+          <input type="file" id="fileinput" accept=".pdf,.docx,.txt" style="display:none">
+        </label>
+      </div>
     <div id="fileinfo" style="margin-top:8px;font-size:14px;color:#555;display:none"></div>
     <div id="langcred" style="margin-top:12px;display:none">
       <div id="langinfo" style="font-size:14px;color:#3f51b5"></div>
       <div id="credinfo" style="font-size:14px;color:#e67e22"></div>
     </div>
-    <div id="saveShareRow" style="margin-top:16px;display:none;gap:12px;align-items:center;flex-wrap:wrap">
-      <button id="savebtn" style="background:#27ae60">Save as PDF</button>
-      <button id="sharebtn" style="background:#00bcd4">Share Result</button>
-    </div>
-    <div class="result" id="result"></div>
-    <div id="probbar">
-      <div style="font-size:14px;margin-bottom:4px">Probability:
-        <span id="probval"></span>
+      <div id="saveShareRow">
+        <button id="savebtn">💾 Save as PDF</button>
+        <button id="sharebtn">📤 Share Result</button>
       </div>
-      <div style="background:#eee;border-radius:6px;overflow:hidden;height:24px;width:100%">
-        <div id="bar"></div>
+      <div class="result" id="result"></div>
+      <div id="probbar">
+        <div class="prob-container">
+          <div style="font-size:16px;margin-bottom:12px;font-weight:600;color:#333">
+            Confidence Level: <span id="probval"></span>
+          </div>
+          <div style="background:rgba(0,0,0,0.05);border-radius:8px;overflow:hidden;height:32px;width:100%">
+            <div id="bar"></div>
+          </div>
+        </div>
+        <div id="explain"></div>
       </div>
-      <div id="explain" style="margin-top:8px;font-size:13px;color:#555"></div>
     </div>
   </div>
 

@@ -72,17 +72,6 @@ async def extract(file: UploadFile = File(...)):
         print(f"Extraction endpoint error: {e}", file=sys.stderr)
         return {"text": "", "error": str(e)}
 
-
-
-
-# mount static frontend
-static_dir = os.path.join(os.path.dirname(__file__), '..', 'static')
-if os.path.isdir(static_dir):
-    app.mount("/static", StaticFiles(directory=static_dir, html=True), name="static")
-
-class TextRequest(BaseModel):
-    text: str
-
 @app.get('/health')
 async def health():
     return {"status": "ok"}
