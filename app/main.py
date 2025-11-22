@@ -1,10 +1,10 @@
 
 from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse, FileResponse
 from pydantic import BaseModel
 from app.model import load_artifacts, predict_text
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
 import os
 import tempfile
 import io
@@ -60,6 +60,11 @@ def extract_text_from_file(file: UploadFile):
             return ''
     print(f"Unsupported file type: {ext}", file=sys.stderr)
     return ''
+
+@app.get('/')
+async def root():
+    """Redirect root to static frontend"""
+    return RedirectResponse(url='/static/index.html')
 
 @app.post('/extract')
 async def extract(file: UploadFile = File(...)):
