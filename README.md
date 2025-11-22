@@ -3,6 +3,8 @@
 
 A minimal web app and API for detecting fake news headlines or articles using machine learning.
 
+🔗 **[Live Demo](https://fake-news-detector.up.railway.app)**
+
 ## What It Does
 - Detects whether a news headline or short article is likely fake or real.
 - Accepts direct text input or file upload (PDF, Word, TXT).
