@@ -181,22 +181,6 @@ Fake-News-Detector/
 
 ---
 
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to:
-- 🐛 Report bugs and issues
-- 💡 Suggest new features
-- 🔧 Submit pull requests for improvements
-- 📝 Improve documentation
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
----
-
 ## 👨‍💻 Created by
 
 **Suvaditya Roy**
@@ -204,17 +188,3 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - 🔗 [GitHub](https://github.com/suvadityaroy)
 - 💼 [LinkedIn](https://linkedin.com/in/suvadityaroy)
 - 🌐 [Portfolio](https://suvadityaroy.dev)
-
----
-
-<div align="center">
-
-### ⭐ If you found this helpful, please consider giving it a star!
-
-**Made with ❤️ using Python, FastAPI, and ML** 🚀
-
-</div>
-- Works as a PWA (installable from browser menu).
-
-## Attribution
-**Created by Suvaditya Roy**
