@@ -12,12 +12,12 @@
       padding: 0;
     }
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
       min-height: 100vh;
       padding: 20px;
-      background: linear-gradient(-45deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
       background-size: 400% 400%;
-      animation: gradientShift 15s ease infinite;
+      animation: gradientShift 20s ease infinite;
       position: relative;
       overflow-x: hidden;
     }
@@ -46,75 +46,75 @@
     .card {
       max-width: 900px;
       margin: 40px auto;
-      padding: 40px;
-      background: rgba(255, 255, 255, 0.95);
+      padding: 50px;
+      background: rgba(255, 255, 255, 0.97);
       backdrop-filter: blur(10px);
-      border-radius: 24px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.5);
+      border-radius: 16px;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,255,255,0.5);
       transform: translateY(0);
       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 30px 80px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.6);
+      transform: translateY(-4px);
+      box-shadow: 0 35px 70px rgba(0,0,0,0.2), 0 0 0 1px rgba(255,255,255,0.6);
     }
     h1 {
-      font-size: 2.5em;
+      font-size: 2.8em;
+      font-weight: 700;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      margin-bottom: 10px;
-      animation: titlePulse 3s ease-in-out infinite;
-    }
-    @keyframes titlePulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.85; }
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
     }
     .subtitle {
-      color: #666;
-      font-size: 1.1em;
-      margin-bottom: 30px;
+      color: #555;
+      font-size: 1.05em;
+      margin-bottom: 32px;
+      font-weight: 400;
+      line-height: 1.5;
     }
     textarea {
       width: 100%;
-      height: 160px;
-      padding: 16px;
+      height: 180px;
+      padding: 18px;
       font-size: 16px;
-      border-radius: 12px;
-      border: 2px solid #e0e7ff;
+      border-radius: 10px;
+      border: 2px solid #e8eaf6;
       background: #fafbff;
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.03);
       transition: all 0.3s;
       font-family: inherit;
       resize: vertical;
+      line-height: 1.6;
     }
     textarea:focus {
       outline: none;
       border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102,126,234,0.1), inset 0 2px 4px rgba(0,0,0,0.05);
+      box-shadow: 0 0 0 4px rgba(102,126,234,0.08), inset 0 2px 6px rgba(0,0,0,0.03);
       background: #fff;
     }
     .button-group {
-      margin-top: 20px;
+      margin-top: 28px;
       display: flex;
-      gap: 16px;
+      gap: 12px;
       align-items: center;
       flex-wrap: wrap;
     }
     button {
-      padding: 14px 28px;
-      font-size: 17px;
+      padding: 14px 32px;
+      font-size: 16px;
       font-weight: 600;
-      border-radius: 12px;
+      border-radius: 10px;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: #fff;
       border: none;
       cursor: pointer;
       position: relative;
       overflow: hidden;
-      transition: all 0.3s;
-      box-shadow: 0 4px 15px rgba(102,126,234,0.4);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 16px rgba(102,126,234,0.3);
     }
     button::before {
       content: '';
@@ -124,7 +124,7 @@
       width: 0;
       height: 0;
       border-radius: 50%;
-      background: rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.25);
       transform: translate(-50%, -50%);
       transition: width 0.6s, height 0.6s;
     }
@@ -134,31 +134,31 @@
     }
     button:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(102,126,234,0.6);
+      box-shadow: 0 8px 24px rgba(102,126,234,0.4);
     }
     button:active {
       transform: translateY(0);
     }
     .upload-label {
-      padding: 14px 24px;
+      padding: 14px 28px;
       font-size: 16px;
       cursor: pointer;
       background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
       color: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(245,87,108,0.4);
-      transition: all 0.3s;
-      font-weight: 500;
+      border-radius: 10px;
+      box-shadow: 0 4px 16px rgba(245,87,108,0.3);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-weight: 600;
     }
     .upload-label:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(245,87,108,0.6);
+      box-shadow: 0 8px 24px rgba(245,87,108,0.4);
     }
     .result {
-      margin-top: 30px;
-      padding: 20px;
+      margin-top: 36px;
+      padding: 28px;
       font-weight: 700;
-      font-size: 1.8em;
+      font-size: 2em;
       text-align: center;
       opacity: 0;
       transform: scale(0.8);
@@ -173,11 +173,11 @@
     }
     @keyframes resultBounce {
       0% { transform: scale(0.8); }
-      50% { transform: scale(1.1); }
+      50% { transform: scale(1.08); }
       100% { transform: scale(1); }
     }
     #probbar {
-      margin-top: 24px;
+      margin-top: 28px;
       display: none;
       opacity: 0;
       transform: translateY(20px);
@@ -188,18 +188,19 @@
       transform: translateY(0);
     }
     .prob-container {
-      background: rgba(255,255,255,0.6);
+      background: rgba(102,126,234,0.05);
       border-radius: 12px;
-      padding: 16px;
-      margin-top: 12px;
+      padding: 20px;
+      margin-top: 16px;
+      border: 1px solid rgba(102,126,234,0.1);
     }
     #bar {
-      height: 32px;
+      height: 36px;
       width: 0;
       background: linear-gradient(90deg, #e74c3c 0%, #c0392b 100%);
       border-radius: 8px;
       transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 4px 12px rgba(231,76,60,0.4);
+      box-shadow: 0 4px 12px rgba(231,76,60,0.3);
       position: relative;
       overflow: hidden;
     }
@@ -210,7 +211,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
       animation: shimmer 2s infinite;
     }
     @keyframes shimmer {
@@ -218,76 +219,95 @@
       100% { transform: translateX(100%); }
     }
     #probval {
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 700;
-      margin-left: 8px;
+      margin-left: 10px;
       color: #667eea;
     }
     .attribution {
-      text-align: right;
-      font-size: 14px;
-      color: rgba(255,255,255,0.9);
-      margin-bottom: 16px;
+      text-align: center;
+      font-size: 13px;
+      color: rgba(255,255,255,0.85);
+      margin-bottom: 24px;
       font-weight: 500;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      text-shadow: 0 2px 4px rgba(0,0,0,0.15);
+      letter-spacing: 0.3px;
     }
     #fileinfo {
       margin-top: 12px;
-      padding: 12px;
-      background: rgba(102,126,234,0.1);
+      padding: 12px 16px;
+      background: rgba(102,126,234,0.08);
       border-radius: 8px;
-      font-size: 14px;
+      font-size: 13px;
       color: #667eea;
       display: none;
+      border-left: 3px solid #667eea;
     }
     #langcred {
-      margin-top: 16px;
-      padding: 16px;
-      background: rgba(255,255,255,0.5);
+      margin-top: 20px;
+      padding: 18px;
+      background: rgba(102,126,234,0.05);
       border-radius: 12px;
       display: none;
+      border: 1px solid rgba(102,126,234,0.1);
     }
     #langinfo {
-      font-size: 15px;
+      font-size: 14px;
       color: #667eea;
       font-weight: 600;
       margin-bottom: 8px;
     }
     #explain {
-      margin-top: 16px;
-      padding: 16px;
+      margin-top: 20px;
+      padding: 18px;
       font-size: 15px;
-      color: #555;
-      background: rgba(255,255,255,0.6);
+      color: #444;
+      background: rgba(102,126,234,0.03);
       border-radius: 10px;
-      line-height: 1.6;
+      line-height: 1.7;
+      border-left: 3px solid #667eea;
     }
     #saveShareRow {
-      margin-top: 24px;
+      margin-top: 28px;
       display: none;
-      gap: 16px;
+      gap: 12px;
       flex-wrap: wrap;
     }
     #savebtn {
       background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-      box-shadow: 0 4px 15px rgba(17,153,142,0.4);
+      box-shadow: 0 4px 16px rgba(17,153,142,0.3);
     }
     #savebtn:hover {
-      box-shadow: 0 8px 25px rgba(17,153,142,0.6);
+      box-shadow: 0 8px 24px rgba(17,153,142,0.4);
     }
     #sharebtn {
       background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-      box-shadow: 0 4px 15px rgba(79,172,254,0.4);
+      box-shadow: 0 4px 16px rgba(79,172,254,0.3);
     }
     #sharebtn:hover {
-      box-shadow: 0 8px 25px rgba(79,172,254,0.6);
+      box-shadow: 0 8px 24px rgba(79,172,254,0.4);
     }
     @media (max-width: 600px) {
       .card {
-        padding: 24px;
+        padding: 28px;
       }
       h1 {
-        font-size: 2em;
+        font-size: 2.2em;
+      }
+      .subtitle {
+        font-size: 0.95em;
+      }
+      textarea {
+        height: 140px;
+      }
+      .button-group {
+        gap: 10px;
+      }
+      button,
+      .upload-label {
+        flex: 1;
+        min-width: 140px;
+        padding: 12px 20px;
       }
     }
   </style>
@@ -297,19 +317,19 @@
     <div class="attribution">Created by Suvaditya Roy</div>
     <div class="card">
       <h1>🔍 Fake News Detector</h1>
-      <p class="subtitle">Analyze news headlines and articles with AI-powered detection</p>
-      <textarea id="text" placeholder="Paste your news text here..."></textarea>
+      <p class="subtitle">Advanced AI-powered analysis for detecting misinformation in news content</p>
+      <textarea id="text" placeholder="Paste your news text or article here for analysis..."></textarea>
       <div class="button-group">
-        <button id="btn">🚀 Detect Now</button>
+        <button id="btn">🚀 Analyze</button>
         <label class="upload-label">
           <span id="filelabel">📁 Upload File</span>
           <input type="file" id="fileinput" accept=".pdf,.docx,.txt" style="display:none">
         </label>
       </div>
-    <div id="fileinfo" style="margin-top:8px;font-size:14px;color:#555;display:none"></div>
-    <div id="langcred" style="margin-top:12px;display:none">
-      <div id="langinfo" style="font-size:14px;color:#3f51b5"></div>
-      <div id="credinfo" style="font-size:14px;color:#e67e22"></div>
+    <div id="fileinfo"></div>
+    <div id="langcred">
+      <div id="langinfo"></div>
+      <div id="credinfo"></div>
     </div>
       <div id="saveShareRow">
         <button id="savebtn">💾 Save as PDF</button>
@@ -318,10 +338,10 @@
       <div class="result" id="result"></div>
       <div id="probbar">
         <div class="prob-container">
-          <div style="font-size:16px;margin-bottom:12px;font-weight:600;color:#333">
+          <div style="font-size:16px;margin-bottom:14px;font-weight:600;color:#333">
             Confidence Level: <span id="probval"></span>
           </div>
-          <div style="background:rgba(0,0,0,0.05);border-radius:8px;overflow:hidden;height:32px;width:100%">
+          <div style="background:rgba(102,126,234,0.08);border-radius:8px;overflow:hidden;height:36px;width:100%">
             <div id="bar"></div>
           </div>
         </div>
