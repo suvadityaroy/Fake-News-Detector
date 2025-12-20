@@ -1,62 +1,53 @@
-# 🔍 Fake News Detector
 
-[![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-blue?logo=python&logoColor=white)](https://www.python.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.104%2B-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+# Fake News Detector
 
-> AI-powered detection system for identifying misinformation in news articles
+A minimal web app and API for detecting fake news headlines or articles using machine learning.
 
-🔗 **[Live Demo](https://fake-news-detector.up.railway.app)** • 📚 **[API Docs](https://fake-news-detector.up.railway.app/docs)**
+🔗 **[Live Demo](https://fake-news-detector.up.railway.app)**
 
-## ✨ Features
+## What It Does
+- Detects whether a news headline or short article is likely fake or real.
+- Accepts direct text input or file upload (PDF, Word, TXT).
+- Shows probability/confidence and a simple explanation.
+- Detects language automatically.
+- Allows saving results as PDF or sharing.
+- Animated, modern UI (PWA-ready for install on mobile/desktop).
 
-- 🤖 ML-powered fake news detection
-- 📄 Multi-format support (text, PDF, DOCX, TXT)
-- 📊 Confidence scoring with visual bars
-- 🌍 Auto language detection
-- 💾 Export as PDF / 📤 Share results
-- 🎨 Modern animated UI
-- ⚡ REST API with full documentation
+## Skills & Technologies Used
+- **Python** (FastAPI, scikit-learn, pandas, joblib)
+- **Frontend**: HTML, CSS, JavaScript (animated UI, file upload, browser APIs)
+- **File extraction**: PyPDF2, python-docx
+- **API**: REST endpoints for prediction, extraction, health check
+- **Testing**: pytest
 
-## 🛠️ Tech Stack
+## How to Use
 
-**Backend:** Python, FastAPI, scikit-learn, pandas, joblib  
-**Frontend:** HTML5, CSS3, JavaScript (ES6+)  
-**Deployment:** Railway, Uvicorn  
-
-## 🚀 Quick Start
-
-### 1. Clone & Setup
-```bash
-git clone https://github.com/suvadityaroy/Fake-News-Detector.git
-cd Fake-News-Detector
+### 1. Install Requirements
+```powershell
 python -m venv .venv
-.\.venv\Scripts\Activate.ps1  # Windows
-source .venv/bin/activate      # macOS/Linux
+.\.venv\Scripts\Activate.ps1
+pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### 2. Train Model
-```bash
+### 2. Train the Model
+```powershell
 python train.py
 ```
 
-### 3. Run Server
-```bash
+### 3. Start the Server
+```powershell
 .\.venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
-### 4. Access
-- 🌐 Web UI: [http://127.0.0.1:8000/static/](http://127.0.0.1:8000/static/)
-- 📚 API Docs: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+### 4. Use the App
+- Open [http://127.0.0.1:8000/static/](http://127.0.0.1:8000/static/) in your browser for the web UI.
 
-## 📋 API Endpoints
+### 5. Features
+- Paste or upload news text, click Detect.
+- See result, probability, explanation, and detected language.
+- Save as PDF or share result.
+- Works as a PWA (installable from browser menu).
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/predict` | Analyze text for fake/real news |
-| `POST` | `/extract` | Extract text from file |
-| `GET` | `/health` | Health check |
-
-## 👨‍💻 Created by
-
-**Suvaditya Roy** — [GitHub](https://github.com/suvadityaroy) | [LinkedIn](https://linkedin.com/in/suvadityaroy)
+## Attribution
+**Created by Suvaditya Roy**
