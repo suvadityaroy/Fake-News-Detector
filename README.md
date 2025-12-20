@@ -1,11 +1,17 @@
 
 # Fake News Detector
 
-A minimal web app and API for detecting fake news headlines or articles using machine learning.
+📰 A minimal web app and API for detecting fake news headlines or articles using machine learning.
 
 🔗 **[Live Demo](https://fake-news-detector.up.railway.app)**
 
-## What It Does
+![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python)
+![FastAPI](https://img.shields.io/badge/FastAPI-API-success?logo=fastapi)
+![Railway](https://img.shields.io/badge/Deployed-Railway-purple?logo=railway)
+
+Last updated: December 21, 2025
+
+## 🧭 What It Does
 - Detects whether a news headline or short article is likely fake or real.
 - Accepts direct text input or file upload (PDF, Word, TXT).
 - Shows probability/confidence and a simple explanation.
@@ -13,14 +19,14 @@ A minimal web app and API for detecting fake news headlines or articles using ma
 - Allows saving results as PDF or sharing.
 - Animated, modern UI (PWA-ready for install on mobile/desktop).
 
-## Skills & Technologies Used
+## 🛠️ Skills & Technologies Used
 - **Python** (FastAPI, scikit-learn, pandas, joblib)
 - **Frontend**: HTML, CSS, JavaScript (animated UI, file upload, browser APIs)
 - **File extraction**: PyPDF2, python-docx
 - **API**: REST endpoints for prediction, extraction, health check
 - **Testing**: pytest
 
-## How to Use
+## 🚀 How to Use
 
 ### 1. Install Requirements
 ```powershell
@@ -43,11 +49,11 @@ python train.py
 ### 4. Use the App
 - Open [http://127.0.0.1:8000/static/](http://127.0.0.1:8000/static/) in your browser for the web UI.
 
-### 5. Features
+### ✨ Features
 - Paste or upload news text, click Detect.
 - See result, probability, explanation, and detected language.
 - Save as PDF or share result.
 - Works as a PWA (installable from browser menu).
 
-## Attribution
+## 👤 Attribution
 **Created by Suvaditya Roy**
